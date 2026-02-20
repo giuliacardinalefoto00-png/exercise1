@@ -8,35 +8,46 @@
 </head>
 <body>
     <canvas id="matrix"></canvas>
-<canvas id="snake" tabindex="0" style="display:none; position:absolute; top:0; left:0; z-index:10;"></canvas>
-<div id="gameOver" style="
-    display:none;
-    position:absolute;
-    top:0; left:0;
-    width:100%; height:100%;
-    background:rgba(0,0,0,0.8);
-    color:#00ff00;
-    font-family:monospace;
-    text-align:center;
-    padding-top:150px;
-    z-index:20;
-">
-    <h1>GAME OVER</h1>
-    <p id="scoreText"></p>
-    <p id="recordText"></p>
-    <p id="timeText"></p>
-    <button id="playAgain" style="
-        margin-top:20px;
-        padding:10px 20px;
-        background:#00ff00;
-        border:none;
-        color:black;
-        font-weight:bold;
-        cursor:pointer;
-    ">PLAY AGAIN</button>
-</div>
 
+    <canvas id="snake" tabindex="0" style="display:none; position:absolute; top:0; left:0; z-index:10;"></canvas>
 
+    <div id="gameOver" style="
+        display:none;
+        position:absolute;
+        top:0; left:0;
+        width:100%; height:100%;
+        background:rgba(0,0,0,0.8);
+        color:#00ff00;
+        font-family:monospace;
+        text-align:center;
+        padding-top:150px;
+        z-index:20;
+    ">
+        <h1>GAME OVER</h1>
+        <p id="scoreText"></p>
+        <p id="recordText"></p>
+        <p id="timeText"></p>
+        <button id="playAgain" style="
+            margin-top:20px;
+            padding:10px 20px;
+            background:#00ff00;
+            border:none;
+            color:black;
+            font-weight:bold;
+            cursor:pointer;
+        ">PLAY AGAIN</button>
+    </div>
+
+    <!-- SCHERMATA NERA COMPLETA PER I PUNTINI -->
+    <div id="dotsScreen" style="
+        display:none;
+        position:fixed;
+        top:0; left:0;
+        width:100vw; height:100vh;
+        background:black;
+        z-index:999;
+        cursor:crosshair;
+    "></div>
 
     <script src="script.js"></script>
 </body>
