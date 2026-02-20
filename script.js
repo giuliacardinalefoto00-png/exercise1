@@ -1,4 +1,6 @@
-// MATRIX RAIN + LETTERE + INTERAZIONI
+// =============================
+// MATRIX RAIN + NOME / COGNOME
+// =============================
 const canvas = document.getElementById("matrix");
 const ctx = canvas.getContext("2d");
 
@@ -166,15 +168,142 @@ function draw() {
 setInterval(draw, 33);
 
 
-/// ---------------------------
-// 🎮 SNAKE GAME (TUO CODICE)
-// ---------------------------
-// (rimane identico, non modificato)
+// =============================
+// 🎮 SNAKE GAME COMPLETO
+// =============================
+let snake = [];
+let food = {};
+let dx = 20;
+let dy = 0;
+let snakeRunning = false;
+let score = 0;
+let record = 0;
+let startTime = 0;
+
+const gameOverScreen = document.getElementById("gameOver");
+const scoreText = document.getElementById("scoreText");
+const recordText = document.getElementById("recordText");
+const timeText = document.getElementById("timeText");
+const playAgainBtn = document.getElementById("playAgain");
+
+playAgainBtn.addEventListener("click", () => {
+    gameOverScreen.style.display = "none";
+    startSnake();
+});
+
+function startSnake() {
+    snakeCanvas.style.display = "block";
+
+    snake = [
+        { x: 200, y: 200 },
+        { x: 180, y: 200 },
+        { x: 160, y: 200 }
+    ];
+
+    dx = 20;
+    dy = 0;
+
+    score = 0;
+    startTime = Date.now();
+
+    placeFood();
+
+    snakeRunning = true;
+
+    document.addEventListener("keydown", snakeControls);
+
+    gameLoop();
+}
+
+function snakeControls(e) {
+    if (!snakeRunning) return;
+
+    if (e.key === "Escape") {
+        endSnake();
+        return;
+    }
+
+    if (e.key === "ArrowUp" && dy === 0) { dx = 0; dy = -20; }
+    if (e.key === "ArrowDown" && dy === 0) { dx = 0; dy = 20; }
+    if (e.key === "ArrowLeft" && dx === 0) { dx = -20; dy = 0; }
+    if (e.key === "ArrowRight" && dx === 0) { dx = 20; dy = 0; }
+}
+
+function placeFood() {
+    food = {
+        x: Math.floor(Math.random() * (snakeCanvas.width / 20)) * 20,
+        y: Math.floor(Math.random() * (snakeCanvas.height / 20)) * 20
+    };
+}
+
+function gameLoop() {
+    if (!snakeRunning) return;
+
+    setTimeout(() => {
+        updateSnake();
+        gameLoop();
+    }, 100);
+}
+
+function updateSnake() {
+    snakeCtx.fillStyle = "black";
+    snakeCtx.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
+
+    snakeCtx.fillStyle = "#00ff00";
+    snakeCtx.font = "24px monospace";
+    snakeCtx.textAlign = "center";
+    snakeCtx.fillText(score.toString().padStart(2, "0"), snakeCanvas.width / 2, 40);
+
+    const head = {
+        x: snake[0].x + dx,
+        y: snake[0].y + dy
+    };
+
+    if (
+        head.x < 0 ||
+        head.x >= snakeCanvas.width ||
+        head.y < 0 ||
+        head.y >= snakeCanvas.height
+    ) {
+        endSnake();
+        return;
+    }
+
+    snake.unshift(head);
+
+    if (head.x === food.x && head.y === food.y) {
+        score++;
+        placeFood();
+    } else {
+        snake.pop();
+    }
+
+    snakeCtx.fillStyle = "#00ff00";
+    snake.forEach(part => snakeCtx.fillRect(part.x, part.y, 20, 20));
+
+    snakeCtx.fillStyle = "red";
+    snakeCtx.fillRect(food.x, food.y, 20, 20);
+}
+
+function endSnake() {
+    snakeRunning = false;
+    snakeCanvas.style.display = "none";
+
+    const timePlayed = Math.floor((Date.now() - startTime) / 1000);
+
+    if (score > record) record = score;
+
+    scoreText.textContent = "Punteggio: " + score;
+    recordText.textContent = "Record: " + record;
+    timeText.textContent = "Tempo: " + timePlayed + "s";
+
+    gameOverScreen.style.display = "block";
+}
 
 
-/// ---------------------------
+// =============================
 // 🟪 GLITCH SULLA LETTERA "i"
-// ---------------------------
+// =============================
 function triggerGlitch() {
     const glitchDiv = document.createElement("div");
     glitchDiv.style.position = "fixed";
@@ -193,13 +322,13 @@ function triggerGlitch() {
 }
 
 
-/// ---------------------------
+// =============================
 // 🟦 SCHERMATA NERA (LETTERA "l")
-// ---------------------------
+// =============================
 const dotsScreen = document.getElementById("dotsScreen");
 let dots = [];
 let dotsActive = false;
-let mousePos = { x: 0, y: 0 };
+let mousePosDots = { x: 0, y: 0 };
 
 function startDotsScreen() {
     dotsScreen.style.display = "block";
@@ -214,13 +343,17 @@ function startDotsScreen() {
 }
 
 function trackMouseDots(e) {
-    mousePos.x = e.clientX;
-    mousePos.y = e.clientY;
+    mousePosDots.x = e.clientX;
+    mousePosDots.y = e.clientY;
 }
 
 function createDot(e) {
+    if (!dotsActive) return;
+
     const dot = document.createElement("div");
     dot.classList.add("dot");
+
+    dot.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
 
     dot.style.left = e.clientX + "px";
     dot.style.top = e.clientY + "px";
@@ -230,23 +363,20 @@ function createDot(e) {
     dots.push({
         el: dot,
         x: e.clientX,
-        y: e.clientY
+        y: e.clientY,
+        speed: 0.02 + Math.random() * 0.03
     });
 }
 
 function animateDots() {
     if (!dotsActive) return;
 
-    dots.forEach((dot, index) => {
-        const delay = index * 4;
+    dots.forEach((dot) => {
+        dot.x += (mousePosDots.x - dot.x) * dot.speed;
+        dot.y += (mousePosDots.y - dot.y) * dot.speed;
 
-        setTimeout(() => {
-            dot.x += (mousePos.x - dot.x) * 0.1;
-            dot.y += (mousePos.y - dot.y) * 0.1;
-
-            dot.el.style.left = dot.x + "px";
-            dot.el.style.top = dot.y + "px";
-        }, delay);
+        dot.el.style.left = dot.x + "px";
+        dot.el.style.top = dot.y + "px";
     });
 
     requestAnimationFrame(animateDots);
@@ -266,9 +396,9 @@ function exitDotsScreen(e) {
 }
 
 
-/// ---------------------------
+// =============================
 // 🟩 CLICK LETTERE
-// ---------------------------
+// =============================
 canvas.addEventListener("click", () => {
     if (lastHoveredLetter === "e") startSnake();
     if (lastHoveredLetter === "i") triggerGlitch();
