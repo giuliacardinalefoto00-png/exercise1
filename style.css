@@ -8,12 +8,34 @@ canvas {
     display: block;
 }
 
-/* PUNTINI NELLA SCHERMATA NERA */
+/* Schermata nera */
+#dotsScreen {
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100vw; height:100vh;
+    background:black;
+    z-index:999;
+    cursor:crosshair;
+}
+
+/* Pallini (3 volte più grandi) */
 .dot {
     position:absolute;
-    width:12px;
-    height:12px;
-    background:#00ff00;
+    width:48px;
+    height:48px;
     border-radius:50%;
+    pointer-events:auto;
+    transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+}
+
+/* Particelle 0/1 */
+.particle {
+    position:absolute;
+    font-family:monospace;
+    font-size:32px;
+    font-weight:bold;
     pointer-events:none;
+    opacity:1;
+    transition: opacity 0.6s ease-out;
 }
