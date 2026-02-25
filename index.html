@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <canvas id="matrix"></canvas>
 
+    <canvas id="matrix"></canvas>
     <canvas id="snake" tabindex="0" style="display:none; position:absolute; top:0; left:0; z-index:10;"></canvas>
 
     <div id="gameOver" style="
@@ -38,16 +38,7 @@
         ">PLAY AGAIN</button>
     </div>
 
-    <!-- SCHERMATA NERA COMPLETA PER I PUNTINI -->
-    <div id="dotsScreen" style="
-        display:none;
-        position:fixed;
-        top:0; left:0;
-        width:100vw; height:100vh;
-        background:black;
-        z-index:999;
-        cursor:crosshair;
-    "></div>
+    <div id="dotsScreen"></div>
 
     <script src="script.js"></script>
 </body>
